@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Ventas de Videojuegos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <style>
+        .carousel-item {
+            position: relative;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* Para que la imagen se ajuste sin deformarse */
+        }
+        .carousel-item h3 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .featured-item img {
+            width: 300px;
+            height: 169px; /* Mantenemos la proporción 16:9 */
+        }
+    </style>
+    <div class="container">
+        <h1>Inicio - Ventas de Videojuegos</h1>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="/top_games"><i class="fas fa-trophy"></i> Top Juegos por Año</a></li>
+            <li><a href="/publishers"><i class="fas fa-building"></i> Juegos por Empresa</a></li>
+            <li><a href="/statistics"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+            <li><a href="/data"><i class="fas fa-database"></i> Datos</a></li>
+        </ul>
+
+        <!-- Carrusel de juegos por categoría -->
+        <h2>Juegos por Categoría</h2>
+        <div class="carousel">
+            {% for genre in genres %}
+            <div class="carousel-item">
+                <a href="{{ url_for('genre', genre_name=genre) }}">
+                    <h3>{{ genre }}</h3>
+                    <img src="{{ url_for('static', filename=genre_images.get(genre, 'img/default.jpg')) }}" alt="{{ genre }}">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sección de Juegos Destacados -->
+        <h2>Juegos Destacados</h2>
+        <div class="featured-section">
+            <div class="featured-item">
+                <a href="{{ url_for('most_sold') }}">
+                    <h3>Juegos Más Vendidos</h3>
+                    <img src="{{ url_for('static', filename='img/img1.jpg') }}" alt="Juegos Más Vendidos">
+                </a>
+            </div>
+            <div class="featured-item">
+                <a href="{{ url_for('most_played') }}">
+                    <h3>Juegos Más Jugados</h3>
+                    <img src="{{ url_for('static', filename='img/img2.jpg') }}" alt="Juegos Más Jugados">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.carousel').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 2000,
+            });
+        });
+    </script>
+</body>
+</html>

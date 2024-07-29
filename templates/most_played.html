@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Más Jugados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        .container {
+            text-align: center;
+        }
+        .table-responsive {
+            display: inline-block;
+            margin: 0 auto;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        img {
+            max-height: 50px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Juegos Más Jugados</h1>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="/top_games"><i class="fas fa-trophy"></i> Top Juegos por Año</a></li>
+                <li><a href="/publishers"><i class="fas fa-building"></i> Juegos por Empresa</a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+                <li><a href="/data"><i class="fas fa-database"></i> Datos</a></li>
+            </ul>
+        </nav>
+        <div class="table-responsive">
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Juego</th>
+                        <th>Ventas Globales (millones)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for game, image in zip(games, images) %}
+                    <tr>
+                        <td><img src="{{ url_for('static', filename=image) }}" alt="Imagen del juego"> {{ game['Name'] }}</td>
+                        <td>{{ game['Global_Sales'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

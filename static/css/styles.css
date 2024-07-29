@@ -1,0 +1,146 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b2838;
+    color: #c7d5e0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    color: #ffffff;
+}
+
+a {
+    color: #66c0f4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Navigation bar */
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #2a475e;
+    margin-bottom: 20px;
+}
+
+ul li {
+    margin-right: 20px;
+}
+
+ul li a {
+    padding: 10px 15px;
+    display: block;
+    color: #c7d5e0; /* Color del texto */
+}
+
+.navbar li.active a {
+    font-weight: bold;
+    color: #333; /* Color más oscuro */
+}
+
+/* Carousel */
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-item {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: 300px;
+    margin-right: 10px;
+    background-color: #2a475e;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.carousel-item h3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Featured section */
+.featured-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.featured-item {
+    width: 48%;
+    background-color: #2a475e;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.featured-item img {
+    display: block;
+    margin: 0 auto 10px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.featured-item h3 {
+    margin: 10px 0;
+}
+
+/* Footer */
+.footer {
+    background-color: #171a21;
+    padding: 20px;
+    text-align: center;
+    color: #c7d5e0;
+    margin-top: 20px;
+}
+
+/* Image container */
+.image-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.game-image {
+    width: 400px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.game-image:hover {
+    transform: scale(1.05);
+}

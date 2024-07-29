@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Steam-like Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+        }
+        nav ul {
+            display: flex;
+            justify-content: space-around;
+            background-color: #1f1f1f;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        nav ul li {
+            list-style: none;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #00adb5;
+        }
+        .container {
+            margin: 2rem;
+        }
+        .card {
+            background-color: #1f1f1f;
+            border: 1px solid #333333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 2rem;
+        }
+        .card-header {
+            background-color: #333333;
+            padding: 1rem;
+            border-bottom: 1px solid #444444;
+            font-size: 1.5rem;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1><i class="fas fa-chart-bar"></i> Estadísticas de Ventas de Videojuegos</h1>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="/top_games"><i class="fas fa-trophy"></i> Top Juegos por Año</a></li>
+                <li><a href="/publishers"><i class="fas fa-building"></i> Juegos por Empresa</a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+                <li><a href="/data"><i class="fas fa-database"></i> Datos</a></li>
+            </ul>
+        </nav>
+
+        <!-- Gráfica interactiva de ventas globales por plataforma -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="fas fa-gamepad"></i> Ventas Globales por Plataforma
+            </div>
+            <div class="card-body">
+                {{ plot_div2|safe }}
+            </div>
+        </div>
+
+        <!-- Gráfica interactiva de ventas globales por género -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Ventas Globales por Género
+            </div>
+            <div class="card-body">
+                {{ plot_div3|safe }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Opciones de configuración de Plotly
+        var layout = {
+            paper_bgcolor: '#121212',
+            plot_bgcolor: '#121212',
+            font: {
+                color: '#ffffff'
+            },
+            xaxis: {
+                gridcolor: '#444444'
+            },
+            yaxis: {
+                gridcolor: '#444444'
+            }
+        };
+        // Aplica el layout a tus gráficos
+        Plotly.relayout('plot_div2', layout);
+        Plotly.relayout('plot_div3', layout);
+    </script>
+</body>
+</html>

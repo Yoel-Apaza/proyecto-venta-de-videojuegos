@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Juegos por Año</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+        .table-responsive {
+            display: inline-block;
+            margin: 0 auto;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        /* Estilos para el botón de descarga */
+        .btn-download {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-download:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Top Juegos por Año</h1>
+        <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="/top_games"><i class="fas fa-trophy"></i> Top Juegos por Año</a></li>
+            <li><a href="/publishers"><i class="fas fa-building"></i> Juegos por Empresa</a></li>
+            <li><a href="/statistics"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+            <li><a href="/data"><i class="fas fa-database"></i> Datos</a></li></li>
+        </ul>
+
+        <!-- Botón para descargar PDF -->
+        <button class="btn-download" onclick="downloadPDF()">Descargar PDF</button>
+
+        <!-- Contenedor de tablas dinámicas -->
+        <div id="tables-container">
+            {% for year, games in top_games_by_year.items() %}
+                <h2>{{ year }}</h2>
+                <table class="data" id="table-{{ year }}">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Ventas Globales</th>
+                            <th>Plataforma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in games %}
+                            <tr>
+                                <td>{{ game['Name'] }}</td>
+                                <td>{{ game['Global_Sales'] }}</td>
+                                <td>{{ game['Platform'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Selecciona el contenedor de tablas
+            const container = document.getElementById('tables-container');
+            const tables = container.getElementsByTagName('table');
+
+            // Itera sobre cada tabla y la añade al PDF
+            for (let i = 0; i < tables.length; i++) {
+                if (i > 0) {
+                    doc.addPage();
+                }
+                const year = tables[i].id.split('-')[1];
+                doc.text("Top Juegos " + year, 10, 10);
+                doc.autoTable({
+                    html: tables[i],
+                    startY: 20,
+                    theme: 'grid',
+                    headStyles: { fillColor: [255, 0, 0] }
+                });
+            }
+
+            // Guarda el PDF
+            doc.save('Top_Juegos_por_Año.pdf');
+        }
+    </script>
+</body>
+</html>

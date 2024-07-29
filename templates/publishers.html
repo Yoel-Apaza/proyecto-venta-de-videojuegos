@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos por Empresa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .container {
+            text-align: center;
+        }
+        .table-responsive {
+            display: inline-block;
+            margin: 0 auto;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .game-list li {
+            margin: 5px;
+            background-color: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .company-img {
+            max-width: 50px;
+            max-height: 50px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        #searchInput {
+            margin: 20px 0;
+            padding: 8px;
+            width: 50%;
+            font-size: 16px;
+        }
+        .btn-download {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-download:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Juegos por Empresa</h1>
+        <button class="btn-download" onclick="exportToPDF()">Descargar como PDF</button>
+        <nav>
+            <ul>
+                <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="/top_games"><i class="fas fa-trophy"></i> Top Juegos por Año</a></li>
+                <li><a href="/publishers"><i class="fas fa-building"></i> Juegos por Empresa</a></li>
+                <li><a href="/statistics"><i class="fas fa-chart-line"></i> Estadísticas</a></li>
+                <li><a href="/data"><i class="fas fa-database"></i> Datos</a></li>
+            </ul>
+        </nav>
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Buscar juegos o empresas...">
+        <div class="table-responsive">
+            <table class="data">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Juegos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publisher, games in publisher_games.items() %}
+                    <tr>
+                        <td>
+                            <img src="{{ url_for('static', filename='img/em' + loop.index|string + '.jpg') }}" alt="{{ publisher }}" class="company-img">
+                            {{ publisher }}
+                        </td>
+                        <td>
+                            <ul class="game-list">
+                                {% for game in games %}
+                                <li>{{ game }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toLowerCase();
+            table = document.querySelector(".data");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            
+            const element = document.querySelector('.table-responsive');
+            
+            // Obtener dimensiones de la tabla
+            const width = element.clientWidth;
+            const height = element.clientHeight;
+            
+            // Crear canvas con las dimensiones de la tabla
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Renderizar la tabla en el canvas
+            const ctx = canvas.getContext('2d');
+            const options = { scale: 2 }; // Escalar para mejorar la calidad (opcional)
+            html2canvas(element, options).then(canvas => {
+                ctx.drawImage(canvas, 0, 0, width, height);
+                
+                // Convertir el canvas a una imagen PNG
+                const imgData = canvas.toDataURL('image/png');
+                
+                // Añadir la imagen al PDF
+                pdf.addImage(imgData, 'PNG', 0, 0, width / 2, height / 2);
+                
+                // Guardar el PDF
+                pdf.save('juegos_por_empresa.pdf');
+            });
+        }
+    </script>
+</body>
+</html>
